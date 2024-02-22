@@ -1,0 +1,8 @@
+#ignore mac system files
+.DS_store
+
+#ignore local python versions
+.python-version
+
+#ignore virtual enironments
+.venv/
