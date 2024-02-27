@@ -101,8 +101,8 @@ class RealNVP(keras.Model):
     def __call__(self, x, training=True):
         # Starting value of the log determinant of the jacobian
         log_det_inv = 0
-        # Direction -1 means training (from Gaussian to our distribution)
-        # Direction 1 is the inverse function (from distribution to Gaussian)
+        # Direction -1 means training (from our distribution to Gaussian)
+        # Direction 1 is the inverse function (from Gaussian to distribution)
         direction = 1
         if training:
             direction = -1
