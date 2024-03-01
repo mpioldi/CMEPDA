@@ -180,21 +180,20 @@ plt.xlabel("epoch")
 z, _ = model(data)
 
 # From latent space to data: data reconstruction (x) from Gaussian (sample)
-samples = model.distribution.sample(3000)
-x, _ = model.predict(samples)
+samples = model.distribution.sample(15000)
+#x, _ = model.predict(samples)
 
-f, axes = plt.subplots(2, 2)
+# Generate 16 plots in a 4x4 arrangement
+f, axes = plt.subplots(4, 4)
 f.set_size_inches(20, 15)
 
-axes[0, 0].scatter(data[:, 0], data[:, 1], color="r")
-axes[0, 0].set(title="Inference data space X", xlabel="x", ylabel="y")
-axes[0, 1].scatter(z[:, 0], z[:, 1], color="r")
-axes[0, 1].set(title="Inference latent space Z", xlabel="x", ylabel="y")
-axes[0, 1].set_xlim([-3.5, 4])
-axes[0, 1].set_ylim([-4, 4])
-axes[1, 0].scatter(samples[:, 0], samples[:, 1], color="g")
-axes[1, 0].set(title="Generated latent space Z", xlabel="x", ylabel="y")
-axes[1, 1].scatter(x[:, 0], x[:, 1], color="g")
-axes[1, 1].set(title="Generated data space X", label="x", ylabel="y")
-axes[1, 1].set_xlim([-2, 2])
-axes[1, 1].set_ylim([-2, 2])
+# First plot is a 1D Gaussian (for reference)
+axes[0, 0].hist(samples[:, 0], bins='auto', color="b")
+axes[0, 0].set(title="Generated latent space 1D")
+# The other 15 plots are the 15 dimensions of the output form the neural network (should be Gaussians)
+for i in range(0, 3):
+    for j in range(0, 3):
+        if i!=0 and j!=0:
+            k = 4*i+j-1
+            axes[i, j].hist(z[:, k], bins='auto', color="r")
+            axes[i, j].set(title=f"Inference latent space x_{k}")
