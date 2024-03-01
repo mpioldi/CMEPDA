@@ -191,8 +191,8 @@ f.set_size_inches(20, 15)
 axes[0, 0].hist(samples[:, 0], bins='auto', color="b")
 axes[0, 0].set(title="Generated latent space 1D")
 # The other 15 plots are the 15 dimensions of the output form the neural network (should be Gaussians)
-for i in range(0, 3):
-    for j in range(0, 3):
+for i in range(4):
+    for j in range(4):
         if i!=0 and j!=0:
             k = 4*i+j-1
             axes[i, j].hist(z[:, k], bins='auto', color="r")
