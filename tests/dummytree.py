@@ -1,6 +1,5 @@
 import numpy as np
 import os
-from array import array
 import ROOT as root
 
 def MakeDummyTree(M, name = "dummytree.root"): #makes a tree with M events, two columns, one with vectors of a elements and the other with vectors of b elements, filled with consecutive numbers
