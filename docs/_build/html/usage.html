@@ -40,7 +40,6 @@
 <span class="go">import numpy</span>
 <span class="go">import ROOT</span>
 <span class="go">import tensorflow</span>
-<span class="go">from tensorflow import keras</span>
 <span class="go">import tensorflow_probability</span>
 <span class="go">import matplotlib.pyplot</span>
 </pre></div>
@@ -51,9 +50,9 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="RootToNumpy">
 <span class="sig-name descname"><span class="pre">RootToNumpy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">treename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RootToNumpy" title="Link to this definition">¶</a></dt>
-<dd><p>Take a name.root file, containing a ‘treename’ tree of the expected shape (a ‘Vector’
+<dd><p>Takes a name.root file, containing a ‘treename’ tree of the expected shape (a ‘Vector’
 branch made of 5 elements arrays of doubles and a ‘Matrix’ branch of 15 elements arrays
-of doubles) and converts it to 20 elements numpy arrays (shape (,20)).</p>
+of doubles) and converts it to an array of 20 elements numpy arrays (shape (,20)).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -68,6 +67,41 @@ of doubles) and converts it to 20 elements numpy arrays (shape (,20)).</p>
 <dd class="field-odd"><p>numpy.array (,20)</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="NumpyToRoot">
+<span class="sig-name descname"><span class="pre">NumpyToRoot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">treename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">myarray</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#NumpyToRoot" title="Link to this definition">¶</a></dt>
+<dd><p>Takes an array of 20 elements numpy arrays (shape (,20)) and converts it to a name.root file,
+containing a ‘treename’ tree with 2 branches: ‘Vector’
+branch made of 5 elements arrays of doubles and ‘Matrix’ branch of 15 elements arrays
+of doubles.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – name of the output .root file (without extension)</p></li>
+<li><p><strong>treename</strong> (<em>str</em>) – name of the tree inside the .root file</p></li>
+<li><p><strong>myarray</strong> (<em>numpy.ndarray</em>) – the input sequence of 20-elements arrays</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#traducers.ArrayDimensionError" title="traducers.ArrayDimensionError"><strong>traducers.ArrayDimensionError</strong></a> – if the input array is not made of 20-elements arrays</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the data contained in the numpy array in a file called name.root, in a tree ‘treename’</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>.root file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>The <code class="docutils literal notranslate"><span class="pre">array</span></code> parameter should have the right size, otherwise
+<code class="docutils literal notranslate"><span class="pre">RootToNumpy()</span></code> will raise the following exception:</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="traducers.ArrayDimensionError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">traducers.</span></span><span class="sig-name descname"><span class="pre">ArrayDimensionError</span></span><a class="headerlink" href="#traducers.ArrayDimensionError" title="Link to this definition">¶</a></dt>
+<dd><p>Raised if input has not the correct size.</p>
 </dd></dl>
 
 </section>
