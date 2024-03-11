@@ -11,7 +11,11 @@ To use NormFlow compression, you will need Python 3, ROOT and the following Pyth
     import os #only needed to run the tests
     import numpy
     import ROOT 
-    import keras
+    import tensorflow
+    from tensorflow import keras
+    import tensorflow_probability
+    import matplotlib.pyplot
+
 
 
 Translating from ROOT to numpy an uncompressed database
