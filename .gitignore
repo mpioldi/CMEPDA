@@ -4,5 +4,8 @@
 #ignore local python versions
 .python-version
 
-#ignore virtual enironments
+#ignore virtual environments
 .venv/
+
+#ignore data
+data.root
