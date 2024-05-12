@@ -11,7 +11,10 @@ from traducers import RootToNumpy
 
 # Root file data copied to numpy array
 data = RootToNumpy("data.root", "tree")
+print(data[:100])
+data = data[::10]
 
+print(f'Input is made of {len(data)} elements \n')
 
 # Dimension of the neural network hidden layers
 output_dim = 256
@@ -26,7 +29,7 @@ for the choice of s and t
 l2 regularization penalties (sum of squares) to avoid overfitting
 '''
 def Coupling(input_shape):
-    input = keras.layers.Input(shape=input_shape)
+    input = keras.layers.Input(shape=(input_shape,))
 
     t_layer_1 = keras.layers.Dense(
         output_dim, activation="relu", kernel_regularizer=regularizers.l2(reg)
@@ -80,14 +83,15 @@ class RealNVP(keras.Model):
         and the other modified by a function of s and t
         the first 5 numbers are always 1s, as they correspond to the 5 (quello che sono, non ricordo...)
         '''
-        self.masks = np.array(
+        self.masks_np = np.array(
             [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
              [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1],
              [1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1]]
             * (num_coupling_layers // 3), dtype="float32"
         )
+        self.masks = tf.convert_to_tensor(self.masks_np, np.float32)
         self.loss_tracker = keras.metrics.Mean(name="loss")
-        self.layers_list = [Coupling(20) for i in range(num_coupling_layers)]
+        self.layers_list =  [Coupling(20) for i in range(num_coupling_layers)]
 
     @property
     def metrics(self):
@@ -164,9 +168,9 @@ model = RealNVP(num_coupling_layers=6) # num_coupling_layers should be multiple 
 
 model.compile(optimizer=keras.optimizers.Adam(learning_rate=0.0001))
 
+
 history = model.fit(
-    data, batch_size=256, epochs=300, verbose=2, validation_split=0.2
-)
+    data, batch_size=256, epochs=300, verbose=2, validation_split=0.2)
 
 
 # Performance evaluation
@@ -195,7 +199,9 @@ axes[0, 0].set(title="Generated latent space 1D")
 # The other 15 plots are the 15 dimensions of the output form the neural network (should be Gaussians)
 for i in range(4):
     for j in range(4):
-        if i!=0 and j!=0:
+        if i!=1 or j!=1:
             k = 4*i+j-1
-            axes[i, j].hist(z[:, k], bins='auto', color="r")
-            axes[i, j].set(title=f"Inference latent space x_{k}")
+            axes[i-1, j-1].hist(z[:, k], range=(-1,1), bins=100, color="r")
+            #axes[i-1, j-1].set(title=f"Inference latent space x_{k}")
+
+plt.show()
