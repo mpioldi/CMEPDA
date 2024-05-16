@@ -26,15 +26,46 @@ def RootToNumpy(name, treename):
         a = [] #initializing an empty list
 
         for entry in tree:
-            x1 = np.array(entry.Vector) #getting values of vector branch
-            x2 = np.array(entry.Matrix) #getting values of matrix branch
+            x1 = np.array(tree.Vector) #getting values of vector branch
+            x2 = np.array(tree.Matrix) #getting values of matrix branch
             x = np.concatenate((x1, x2), axis=None) #fusing into a single vector
             a.append(x)
 
         a = np.array(a) #converting a into a numpy array
 
         return a
+        
+def RootTotxt(name, treename):
 
+    try:
+        file = root.TFile.Open(name, "READ")
+        tree = file.Get(treename)
+
+    except OSError as e:
+        print(f'Impossible to read the file. \n{e}') #message shown if file or tree is not found
+    
+    else:
+
+        a = [] #initializing an empty list
+
+        for entry in tree:
+            x1 = np.array(tree.Vector) #getting values of vector branch
+            x2 = np.array(tree.Matrix) #getting values of matrix branch
+            x = np.concatenate((x1, x2), axis=None) #fusing into a single vector
+            a.append(x)
+
+        a = np.array(a) #converting a into a numpy array
+        
+        
+        outputname = name.removesuffix('.root') + '.txt' #name of the output
+        
+        head = 'qoverp lambda phi dxy dsz cov_1 cov_2 cov_3 cov_4 cov_5 cov_6 cov_7 cov_8 cov_9 cov_10 cov_11 cov_12 cov_13 cov_14 cov_15' #header of the file
+        
+        np.savetxt(outputname, a, delimiter=' ', newline='\n', header=head)
+
+        return
+        
+        
 def NumpyToRoot(name, treename, myarray):
 
     num_elem = len(myarray)
