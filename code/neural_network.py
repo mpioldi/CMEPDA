@@ -5,14 +5,25 @@ from tensorflow.keras import regularizers
 import tensorflow_probability as tfp
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 
-from traducers import RootToNumpy
+from traducers import RootToNumpy, RootTotxt
 
-
+'''
 # Root file data copied to numpy array
 data = RootToNumpy("data.root", "tree")
 print(data[:100])
 data = data[::10]
+'''
+
+if os.path.exists("./data.txt"):
+    pass
+else:
+    RootTotxt("data.root", "tree")
+    
+data = np.loadtxt("data.txt", skiprows=1, ndmin=0)
+print(data[:100])
+data = data[::1000]
 
 print(f'Input is made of {len(data)} elements \n')
 
