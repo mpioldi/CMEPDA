@@ -10,3 +10,6 @@
 #ignore data
 data.root
 data.txt
+
+#ignore dummy tree
+dummytree.root
