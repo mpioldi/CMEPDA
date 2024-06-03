@@ -7,7 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-from traducers import RootToNumpy, RootTotxt
+#from traducers import RootToNumpy, RootTotxt
 
 '''
 # Root file data copied to numpy array
@@ -18,8 +18,8 @@ data = data[::10]
 
 if os.path.exists("./data.txt"):
     pass
-else:
-    RootTotxt("data.root", "tree")
+#else:
+#    RootTotxt("data.root", "tree")
     
 data = np.loadtxt("data.txt", skiprows=1, ndmin=0)
 print(data[:100])
@@ -30,7 +30,7 @@ print(f'Input is made of {len(data)} elements \n')
 # Dimension of the neural network hidden layers
 output_dim = 256
 # Weight used for coupling layers regularization
-reg = 0.01
+reg = 0.00001
 
 ''' Custom affine coupling layers for the training of Real NVP scale and translation parameters
 there are two output branches, one for s and one for t
@@ -96,9 +96,8 @@ class RealNVP(keras.Model):
         '''
         self.masks_np = np.array(
             [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-             [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1],
-             [1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1]]
-            * (num_coupling_layers // 3), dtype="float32"
+             [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1]]
+            * (num_coupling_layers // 2), dtype="float32"
         )
         self.masks = tf.convert_to_tensor(self.masks_np, np.float32)
         self.loss_tracker = keras.metrics.Mean(name="loss")
@@ -175,13 +174,13 @@ class RealNVP(keras.Model):
 
 
 # Start model training
-model = RealNVP(num_coupling_layers=6) # num_coupling_layers should be multiple of 3 (because of mask definition)
+model = RealNVP(num_coupling_layers=14) # num_coupling_layers should be multiple of 2 (because of mask definition)
 
-model.compile(optimizer=keras.optimizers.Adam(learning_rate=0.0001))
+model.compile(optimizer=keras.optimizers.Adam(learning_rate=0.00001))
 
 
 history = model.fit(
-    data, batch_size=256, epochs=300, verbose=2, validation_split=0.2)
+    data, batch_size=256, epochs=100, verbose=2, validation_split=0.2)
 
 
 # Performance evaluation
