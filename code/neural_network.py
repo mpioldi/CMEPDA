@@ -1,4 +1,3 @@
-
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import regularizers
@@ -9,6 +8,8 @@ import os
 
 #from traducers import RootToNumpy, RootTotxt
 
+from traducers import RootTotxt
+
 '''
 # Root file data copied to numpy array
 data = RootToNumpy("data.root", "tree")
@@ -16,21 +17,29 @@ print(data[:100])
 data = data[::10]
 '''
 
+'''
 if os.path.exists("./data.txt"):
     pass
-#else:
-#    RootTotxt("data.root", "tree")
+else:
+    RootTotxt("data.root", "tree")
+'''
     
+#loading data
 data = np.loadtxt("data.txt", skiprows=1, ndmin=0)
 print(data[:100])
-data = data[::1000]
+data = data[::500]
+
+#normalizing entries
+norm = keras.layers.Normalization(axis=-1)
+norm.adapt(data)
+data = norm(data)
 
 print(f'Input is made of {len(data)} elements \n')
 
 # Dimension of the neural network hidden layers
 output_dim = 256
 # Weight used for coupling layers regularization
-reg = 0.00001
+reg = 0.01
 
 ''' Custom affine coupling layers for the training of Real NVP scale and translation parameters
 there are two output branches, one for s and one for t
@@ -41,40 +50,108 @@ l2 regularization penalties (sum of squares) to avoid overfitting
 '''
 def Coupling(input_shape):
     input = keras.layers.Input(shape=(input_shape,))
+    
+    input = keras.layers.BatchNormalization(axis=-1)(input)
 
     t_layer_1 = keras.layers.Dense(
         output_dim, activation="relu", kernel_regularizer=regularizers.l2(reg)
     )(input)
+    
     t_layer_2 = keras.layers.Dense(
         output_dim, activation="relu", kernel_regularizer=regularizers.l2(reg)
     )(t_layer_1)
+    
     t_layer_3 = keras.layers.Dense(
         output_dim, activation="relu", kernel_regularizer=regularizers.l2(reg)
     )(t_layer_2)
+    
     t_layer_4 = keras.layers.Dense(
         output_dim, activation="relu", kernel_regularizer=regularizers.l2(reg)
     )(t_layer_3)
+    
     t_layer_5 = keras.layers.Dense(
-        input_shape, activation="linear", kernel_regularizer=regularizers.l2(reg)
+        output_dim, activation="relu", kernel_regularizer=regularizers.l2(reg)
     )(t_layer_4)
+    
+    t_layer_6 = keras.layers.Dense(
+        output_dim, activation="relu", kernel_regularizer=regularizers.l2(reg)
+    )(t_layer_5)
+    
+    t_layer_7 = keras.layers.Dense(
+        output_dim, activation="relu", kernel_regularizer=regularizers.l2(reg)
+    )(t_layer_6)
+    
+    t_layer_8 = keras.layers.Dense(
+        output_dim, activation="relu", kernel_regularizer=regularizers.l2(reg)
+    )(t_layer_7)
+    
+    t_layer_9 = keras.layers.Dense(
+        output_dim, activation="relu", kernel_regularizer=regularizers.l2(reg)
+    )(t_layer_8)
+    
+    t_layer_10 = keras.layers.Dense(
+        output_dim, activation="relu", kernel_regularizer=regularizers.l2(reg)
+    )(t_layer_9)
+    
+    t_layer_11 = keras.layers.Dense(
+        output_dim, activation="relu", kernel_regularizer=regularizers.l2(reg)
+    )(t_layer_10)
+    
+    t_layer_12 = keras.layers.Dense(
+        input_shape, activation="linear", kernel_regularizer=regularizers.l2(reg)
+    )(t_layer_11)
+    
+    
 
     s_layer_1 = keras.layers.Dense(
         output_dim, activation="relu", kernel_regularizer=regularizers.l2(reg)
     )(input)
+    
     s_layer_2 = keras.layers.Dense(
         output_dim, activation="relu", kernel_regularizer=regularizers.l2(reg)
     )(s_layer_1)
+    
     s_layer_3 = keras.layers.Dense(
         output_dim, activation="relu", kernel_regularizer=regularizers.l2(reg)
     )(s_layer_2)
+    
     s_layer_4 = keras.layers.Dense(
         output_dim, activation="relu", kernel_regularizer=regularizers.l2(reg)
     )(s_layer_3)
+    
     s_layer_5 = keras.layers.Dense(
-        input_shape, activation="tanh", kernel_regularizer=regularizers.l2(reg)
+        output_dim, activation="relu", kernel_regularizer=regularizers.l2(reg)
     )(s_layer_4)
+    
+    s_layer_6 = keras.layers.Dense(
+        output_dim, activation="relu", kernel_regularizer=regularizers.l2(reg)
+    )(s_layer_5)
+    
+    s_layer_7 = keras.layers.Dense(
+        output_dim, activation="relu", kernel_regularizer=regularizers.l2(reg)
+    )(s_layer_6)
+    
+    s_layer_8 = keras.layers.Dense(
+        output_dim, activation="relu", kernel_regularizer=regularizers.l2(reg)
+    )(s_layer_7)
+    
+    s_layer_9 = keras.layers.Dense(
+        output_dim, activation="relu", kernel_regularizer=regularizers.l2(reg)
+    )(s_layer_8)
+    
+    s_layer_10 = keras.layers.Dense(
+        output_dim, activation="relu", kernel_regularizer=regularizers.l2(reg)
+    )(s_layer_9)
+    
+    s_layer_11 = keras.layers.Dense(
+        output_dim, activation="relu", kernel_regularizer=regularizers.l2(reg)
+    )(s_layer_10)
+    
+    s_layer_12 = keras.layers.Dense(
+        input_shape, activation="tanh", kernel_regularizer=regularizers.l2(reg)
+    )(s_layer_11)
 
-    return keras.Model(inputs=input, outputs=[s_layer_5, t_layer_5])
+    return keras.Model(inputs=input, outputs=[s_layer_12, t_layer_12])
 
 
 # Creation of RealNVP class inheriting from keras.Model
@@ -115,6 +192,7 @@ class RealNVP(keras.Model):
 
     # Implementation of the actual training
     def __call__(self, x, training=True):
+        
         # Starting value of the log determinant of the jacobian
         log_det_inv = 0
         # Direction -1 means training (from our distribution to Gaussian)
@@ -174,13 +252,17 @@ class RealNVP(keras.Model):
 
 
 # Start model training
-model = RealNVP(num_coupling_layers=14) # num_coupling_layers should be multiple of 2 (because of mask definition)
+model = RealNVP(num_coupling_layers=36) # num_coupling_layers should be multiple of 3 (because of mask definition)
 
-model.compile(optimizer=keras.optimizers.Adam(learning_rate=0.00001))
+model.compile(optimizer=keras.optimizers.Adam(learning_rate=0.0005))
 
+reduce_lr = keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.2,
+                              patience=8, min_lr=0.000001)
+                              
+earlystop = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=.2, patience=15, restore_best_weights=True)
 
 history = model.fit(
-    data, batch_size=256, epochs=100, verbose=2, validation_split=0.2)
+    data, batch_size=256, epochs=150, verbose=2, validation_split=0.2, callbacks=[reduce_lr, earlystop])
 
 
 # Performance evaluation
@@ -196,22 +278,42 @@ plt.xlabel("epoch")
 z, _ = model(data)
 
 # From latent space to data: data reconstruction (x) from Gaussian (sample)
-samples = model.distribution.sample(15000)
+samples = model.distribution.sample(len(data))
 #x, _ = model.predict(samples)
+
+#plotting 'before' the change of coorindates
+
+# Generate 16 plots in a 4x4 arrangement
+f1, axes1 = plt.subplots(4, 4)
+f1.set_size_inches(20, 15)
+
+# First plot is a 1D Gaussian (for reference)
+axes1[0, 0].hist(samples[:, 0], bins=100, color="b")
+axes1[0, 0].set(title="Generated latent space 1D")
+# The other 15 plots are the 15 dimensions of the output form the neural network (should be Gaussians)
+for i in range(4):
+    for j in range(4):
+        if i!=1 or j!=1:
+            k = 4*i+j-1
+            axes1[i-1, j-1].hist(data[:, k], bins='auto', color="r")
+            #axes[i-1, j-1].set(title=f"Inference latent space x_{k}")
+
+#plotting 'after' the change of coorindates
 
 # Generate 16 plots in a 4x4 arrangement
 f, axes = plt.subplots(4, 4)
 f.set_size_inches(20, 15)
 
 # First plot is a 1D Gaussian (for reference)
-axes[0, 0].hist(samples[:, 0], bins='auto', color="b")
+axes[0, 0].hist(samples[:, 0], bins=100, color="b")
 axes[0, 0].set(title="Generated latent space 1D")
 # The other 15 plots are the 15 dimensions of the output form the neural network (should be Gaussians)
 for i in range(4):
     for j in range(4):
         if i!=1 or j!=1:
             k = 4*i+j-1
-            axes[i-1, j-1].hist(z[:, k], range=(-1,1), bins=100, color="r")
+            axes[i-1, j-1].hist(z[:, k], range=(-4,4), bins=100, color="r")
             #axes[i-1, j-1].set(title=f"Inference latent space x_{k}")
 
 plt.show()
+
