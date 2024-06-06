@@ -8,12 +8,12 @@
 .venv/
 
 #ignore data
-**/data.root
-**/data.txt
+**/code/data.root
+**/code/data.txt
 
 #ignore dummy tree
-**/dummytree.root
-**/a.root
+**/tests/dummytree.root
+**/tests/a.root
 
 #ignore compiled code
 *.pyc
