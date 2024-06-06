@@ -8,8 +8,8 @@
 .venv/
 
 #ignore data
-*.root
-*.txt
+**/data.root
+**/data.txt
 
 #ignore dummy tree
 **/dummytree.root
