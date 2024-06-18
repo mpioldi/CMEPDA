@@ -24,10 +24,22 @@ else:
     RootTotxt("data.root", "tree")
 '''
 
+QuickSelection = 1
+QuickTrain = 1
 
-SaveModel = 1
-LoadModel = 0
+SaveWeights = 0
+LoadWeights = 0
 TrainModel = 1
+
+if QuickSelection:
+    if QuickTrain:
+        SaveWeights = 1
+        LoadWeights = 0
+        TrainModel = 1
+    else:
+        SaveWeights = 0
+        LoadWeights = 1
+        TrainModel = 0
 
 
 #loading data
@@ -169,7 +181,6 @@ def Coupling(input_shape):
 
 
 # Creation of RealNVP class inheriting from keras.Model
-@keras.saving.register_keras_serializable()
 class RealNVP(keras.Model):
     #
     def __init__(self, num_coupling_layers):
@@ -194,30 +205,6 @@ class RealNVP(keras.Model):
         self.masks = tf.convert_to_tensor(self.masks_np, np.float32)
         self.loss_tracker = keras.metrics.Mean(name="loss")
         self.layers_list = [Coupling(20) for i in range(num_coupling_layers)]
-
-    def get_config(self):
-        config = super().get_config()
-        config.update(
-            {
-                "num_coupling_layers": self.num_coupling_layers,
-                #"distribution": keras.saving.serialize_keras_object(self.distribution),
-                "masks_np": self.masks_np,
-                "masks": self.masks,
-                #"loss_tracker": keras.saving.serialize_keras_object(self.loss_tracker),
-                #"layers_list": keras.saving.serialize_keras_object(self.layers_list),
-
-            }
-        )
-        return config
-
-    @classmethod
-    def from_config(cls, config):
-        #config["distribution"] = keras.layers.deserialize_keras_object(config["distribution"])
-        config["masks_np"] = keras.layers.deserialize(config["masks_np"])
-        config["masks"] = keras.layers.deserialize(config["masks"])
-        #config["loss_tracker"] = keras.layers.deserialize_keras_object(config["loss_tracker"])
-        #config["layers_list"] = keras.layers.deserialize_keras_object(config["layers_list"])
-        return cls(**config)
 
     @property
     def metrics(self):
@@ -289,20 +276,28 @@ class RealNVP(keras.Model):
 
         return {"loss": self.loss_tracker.result()}
 
+    def model_save_weights(self):
+        for idx, x in enumerate(self.layers_list):
+            x.save_weights(f"weights{idx}.weights.h5")
+
+    def model_load_weights(self):
+        for idx, x in enumerate(self.layers_list):
+            x.load_weights(f"weights{idx}.weights.h5")
+
 
 # Start model training
-if LoadModel == 0:
-    model = RealNVP(num_coupling_layers=6) # num_coupling_layers should be multiple of 3 (because of mask definition)
-    model.compile(optimizer=keras.optimizers.Adam(learning_rate=0.0005))
-else:
-    model = keras.models.load_model("model.keras")
+model = RealNVP(num_coupling_layers=18) # num_coupling_layers should be multiple of 3 (because of mask definition)
+model.compile(optimizer=keras.optimizers.Adam(learning_rate=0.0005))
 
 reduce_lr = keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.2,
                               patience=8, min_lr=0.000001)
                               
 earlystop = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=.2, patience=15, restore_best_weights=True)
 
-if TrainModel == 1:
+if LoadWeights:
+    model.model_load_weights()
+
+if TrainModel:
     history = model.fit(
         data, batch_size=256, epochs=5, verbose=2, validation_split=0.2, callbacks=[reduce_lr, earlystop])
 
@@ -377,8 +372,6 @@ plt.savefig('final.png')
 
 plt.show()
 
-if SaveModel == 1:
-    model.save("model.keras")
-
-
+if SaveWeights:
+    model.model_save_weights()
 
