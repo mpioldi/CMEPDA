@@ -24,22 +24,9 @@ else:
     RootTotxt("data.root", "tree")
 '''
 
-QuickSelection = 1
-QuickTrain = 1
-
-SaveWeights = 0
+SaveWeights = 1
 LoadWeights = 0
 TrainModel = 1
-
-if QuickSelection:
-    if QuickTrain:
-        SaveWeights = 1
-        LoadWeights = 0
-        TrainModel = 1
-    else:
-        SaveWeights = 0
-        LoadWeights = 1
-        TrainModel = 0
 
 
 #loading data
@@ -286,7 +273,7 @@ class RealNVP(keras.Model):
 
 
 # Start model training
-model = RealNVP(num_coupling_layers=18) # num_coupling_layers should be multiple of 3 (because of mask definition)
+model = RealNVP(num_coupling_layers=36) # num_coupling_layers should be multiple of 3 (because of mask definition)
 model.compile(optimizer=keras.optimizers.Adam(learning_rate=0.0005))
 
 reduce_lr = keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.2,
@@ -299,7 +286,7 @@ if LoadWeights:
 
 if TrainModel:
     history = model.fit(
-        data, batch_size=256, epochs=5, verbose=2, validation_split=0.2, callbacks=[reduce_lr, earlystop])
+        data, batch_size=256, epochs=75, verbose=2, validation_split=0.2, callbacks=[reduce_lr, earlystop])
 
 
     # Performance evaluation
