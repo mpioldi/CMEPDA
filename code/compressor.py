@@ -73,17 +73,17 @@ def DataCompressor(fname, n_bins, img=0):
 
     #z_unif = z
     z_unif = z.numpy()
-    z_unif[5:] = float(n_bins)*gauss_cdf(z[5:])
+    z_unif[:, 5:] = float(n_bins)*gauss_cdf(z[:, 5:])
     z_unif = tf.convert_to_tensor(z_unif)
 
     #compress data
 
     #z_int = z
     z_int = z.numpy()
-    z_int[5:] = np.floor(z_unif[5:])
+    z_int[:, 5:] = np.floor(z_unif[:, 5:])
     #z_compr = z
     z_compr = z.numpy()
-    z_compr[5:] = z_int.astype(int)[5:]
+    z_compr[:, 5:] = z_int.astype(int)[:, 5:]
     z_compr = tf.convert_to_tensor(z_compr)
     
     #plots, if requested:
@@ -114,7 +114,7 @@ def DataCompressor(fname, n_bins, img=0):
                 print(f'k={k}')
                 '''
                 if k!=4:
-                    axes[i, j].hist(data[:, k], range=(-1,1), bins=500, color="r")
+                    axes[i, j].hist(data[:, k], range=(-0.5,0.5), bins=500, color="r")
                     
         plt.savefig('precompressed.png')
 
@@ -192,8 +192,10 @@ def DataCompressor(fname, n_bins, img=0):
 if __name__ == '__main__':
 
     name = "data.txt"
-    n = 500
+    n = 2048
     result = DataCompressor(name, n, img=produce_images)
+    np.savetxt("compr_data.txt", result, delimiter=' ', newline='\n', header='')
+
     
     
     
