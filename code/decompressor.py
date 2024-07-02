@@ -53,7 +53,7 @@ def DataDecompressor(fname, n_bins, img=0):
     #uploading data
 
     #load data in numpy tensor z_unif...
-    z_unif = np.loadtxt(fname, skiprows=1)
+    z_unif = np.loadtxt(fname)
 
     print('data imported')
     
@@ -171,6 +171,12 @@ if __name__ == '__main__':
     n = 2048
     result = DataDecompressor(name, n, img=produce_images)
     np.savetxt("decompr_data.txt", result, delimiter=' ', newline='\n', header='')
+    
+    
+       
+    
+
+
     
     
        
