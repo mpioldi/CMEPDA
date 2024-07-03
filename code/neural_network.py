@@ -23,8 +23,9 @@ if os.path.exists("./data.txt"):
 else:
     RootTotxt("data.root", "tree")
 '''
-
-layers_number = 24
+#numerb of Coupling layers
+layers_number = 42
+#file where final gaussian means and variances are saved, necessary for compressor and decompressor
 meansfilename = 'means.txt'
 # Dimension of the neural network hidden layers
 output_dim = 256
@@ -39,10 +40,11 @@ for the choice of s and t
 l2 regularization penalties (sum of squares) to avoid overfitting
 '''
 
-#definition of nural network layers
+#definition of neural network layers
 def Coupling(input_shape):
     input = keras.layers.Input(shape=(input_shape,))
-    
+
+    #data normalization layer
     input = keras.layers.BatchNormalization(axis=-1)(input)
 
     t_layer_1 = keras.layers.Dense(
@@ -169,7 +171,8 @@ class RealNVP(keras.Model):
         ''' Masks used to divide the inputs in two parts:
         one used as inputs of the neural network to generate s and t
         and the other modified by a function of s and t
-        the first 5 numbers are always 1s, as they correspond to the 5
+        the first 5 numbers are always 1s, as they correspond to
+        5 fixed parameters which don't need to be compressed
         '''
         self.masks_np = np.array(
             [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -177,6 +180,7 @@ class RealNVP(keras.Model):
             * (num_coupling_layers // 2), dtype="float32"
         )
         self.masks = tf.convert_to_tensor(self.masks_np, np.float32)
+        #definition of loss tracker
         self.loss_tracker = keras.metrics.Mean(name="loss")
         self.layers_list = [Coupling(20) for i in range(num_coupling_layers)]
 
@@ -250,10 +254,12 @@ class RealNVP(keras.Model):
 
         return {"loss": self.loss_tracker.result()}
 
+    # Used to save final weights if SaveWeights option is selected
     def model_save_weights(self):
         for idx, x in enumerate(self.layers_list):
             x.save_weights(f"weights{idx}.weights.h5")
 
+    # Used to load starting weights if LoadWeights option is selected
     def model_load_weights(self):
         for idx, x in enumerate(self.layers_list):
             x.load_weights(f"weights{idx}.weights.h5")
@@ -290,7 +296,8 @@ if __name__ == '__main__':
 
     reduce_lr = keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.2,
                                   patience=10, min_lr=0.000001)
-                                  
+
+    # EarlyStopping called in case training isn't effective anymore (no loss reduction)
     earlystop = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=.2, patience=15, restore_best_weights=True)
 
     if LoadWeights:
@@ -298,10 +305,10 @@ if __name__ == '__main__':
 
     if TrainModel:
         history = model.fit(
-            data, batch_size=128, epochs=50, verbose=2, validation_split=0.2, callbacks=[reduce_lr, earlystop])
+            data, batch_size=128, epochs=120, verbose=2, validation_split=0.2, callbacks=[reduce_lr, earlystop])
 
 
-        # Performance evaluation
+        # Performance evaluation: loss plotting
         plt.figure(figsize=(15, 10))
         plt.plot(history.history["loss"])
         plt.plot(history.history["val_loss"])
@@ -317,9 +324,8 @@ if __name__ == '__main__':
 
     print(type(z))
 
-    # From latent space to data: data reconstruction (x) from Gaussian (sample)
-    samples = model.distribution.sample(len(data))
-    #x, _ = model.predict(samples)
+    # Gaussian example: how our final data should look
+    gaussian = model.distribution.sample(len(data))
 
     #plotting 'before' the change of coordinates
 
@@ -328,19 +334,17 @@ if __name__ == '__main__':
     f1.set_size_inches(20, 15)
 
     # First plot is a 1D Gaussian (for reference)
-    axes1[0, 0].hist(samples[:, 0], bins=500, color="b")
+    axes1[0, 0].hist(gaussian[:, 0], bins=500, color="b")
     axes1[0, 0].set(title="Generated latent space 1D")
-    # The other 15 plots are the 15 dimensions of the output form the neural network (should be Gaussians)
 
+    # The other 15 plots are the 15 dimensions of the output form the neural network (should be Gaussians)
 
     for i in range(4):
         #print(f'i={i}')
         for j in range(4):
             k = 4 + i*4 + j
-            '''
-            print(f'j={j}')
-            print(f'k={k}')
-            '''
+            #print(f'j={j}')
+            #print(f'k={k}')
             if k!=4:
                 axes1[i, j].hist(data[:, k], range=(-1,1), bins=500, color="r")
 
@@ -355,7 +359,7 @@ if __name__ == '__main__':
     f.set_size_inches(20, 15)
 
     # First plot is a 1D Gaussian (for reference)
-    axes[0, 0].hist(samples[:, 0], bins=500, color="b")
+    axes[0, 0].hist(gaussian[:, 0], bins=500, color="b")
     axes[0, 0].set(title="Generated latent space 1D")
     # The other 15 plots are the 15 dimensions of the output form the neural network (should be Gaussians)
 
