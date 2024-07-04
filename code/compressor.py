@@ -62,7 +62,7 @@ def DataCompressor(fname, n_bins, img=0):
 
     #z_unif = z
     z_unif = z.numpy()
-    z_unif[:, 5:] = float(n_bins)*gauss_cdf(z[:, 5:])
+    z_unif[:, 5:] = float(n_bins-1)*gauss_cdf(z[:, 5:])
     z_unif = tf.convert_to_tensor(z_unif)
 
     #compress data by turning to int
