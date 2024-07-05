@@ -50,7 +50,8 @@ deltas = (final_eigenvs - initial_eigenvs) / np.abs(initial_eigenvs)
 
 #estimating width of distribution of percentual error
 
-widths = np.std(deltas, axis=-1)
+deltas_wo_tails = np.ma.masked_where((deltas < -0.1) | (deltas > 0.1),deltas)
+widths = np.std(deltas_wo_tails, axis=0)
 
 # Generate 5 plots in a 1x5 arrangement
 f, axes = plt.subplots(1, 5)
@@ -58,7 +59,7 @@ f.set_size_inches(20, 15)
     
 for i in range(5):
     axes[i].hist(deltas[:, i], range=(-0.1,0.1), bins=401, color="r")
-    axes[i].annotate(f' width={widths[i]:.1e}', xy=(0,0.97), xycoords='axes fraction')
+    axes[i].annotate(f' width={widths[i]:.2}', xy=(0,0.97), xycoords='axes fraction')
     axes[i].set_title(f'Eigenvalue {i}')
 
 plt.savefig('eigenv_deltas.png')
