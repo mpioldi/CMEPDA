@@ -16,36 +16,16 @@ def bitarray_to_float(ba):
     return value[0]
 
 
+def AltDataCompressor(fname, savefile, cut):
 
-complete_compression = 1
-cut = 10
+    path = './' + fname
 
+    if not os.path.exists(path):
+        raise OSError('Requested file not present')
 
-
-if complete_compression == 1:
-    fname = "data.txt"
-    savefile = "alt_compr_data.bin"
-else:
-    fname = "compr_data.txt"
-    savefile = "compr_data.bin"
-
-path = './' + fname
-
-if not os.path.exists(path):
-     raise OSError('Requested file not present')
-
-#check if file is .txt
-
-if not fname.endswith(".txt"):
-    raise OSError('File is not .txt')
-
-if complete_compression == 1:
     data = np.loadtxt(fname, skiprows=1)
     data = data[::500]
-else:
-    data = np.loadtxt(fname)
 
-if complete_compression == 1:
     a = zeros(64)
     for i in range(64 - cut):
         a.invert(i)
@@ -55,8 +35,31 @@ if complete_compression == 1:
             ba = ba & a
             x = bitarray_to_float(ba)
 
-with open(savefile, "wb") as binary_file:
-    binary_file.write(fpzip.compress(data, precision=0, order='C'))
+    with open(savefile, "wb") as binary_file:
+        binary_file.write(fpzip.compress(data, precision=0, order='C'))
+
+def BinDataCompressor(fname, savefile):
+
+    path = './' + fname
+
+    if not os.path.exists(path):
+         raise OSError('Requested file not present')
+
+    data = np.loadtxt(fname)
+
+    with open(savefile, "wb") as binary_file:
+        binary_file.write(fpzip.compress(data, precision=0, order='C'))
+
+
+if __name__ == '__main__':
+
+    complete_compression = 1
+    cut = 10
+
+    if complete_compression == 1:
+        AltDataCompressor("data.txt", "alt_compr_data.bin", cut)
+    else:
+        BinDataCompressor("compr_data.txt", "compr_data.bin")
 
 
 
