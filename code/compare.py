@@ -11,11 +11,6 @@ initial = np.loadtxt("data.txt")[::100]
 
 final = np.loadtxt("decompr_data.txt")
 
-#import parameters needed for conversion
-
-conv_params = np.loadtxt(meansfilename, delimiter=' ')
-sigmas = conv_params[1, :]
-
 #define difference between initial data and after compression-decompression cycle
 
 deltas = np.zeros(np.shape(initial))

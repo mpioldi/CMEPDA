@@ -21,19 +21,29 @@ def bit_decompressor(fname):
 
     return data
 
+def comparator(uncompressed, compressed):
+
+    deltas = np.zeros(np.shape(uncompressed))
+    deltas[:, 5:] = (compressed[:, 5:] - uncompressed[:, 5:]) / np.abs(uncompressed[:, 5:])
+    deltas_wo_tails = np.ma.masked_where((deltas < -0.1) | (deltas > 0.1), deltas)
+    widths = np.std(deltas_wo_tails[:, 5:], axis=0)
+
+    return np.mean(widths), np.std(widths)
+
 
 fname = "data.txt"
 path = './' + fname
 
-    if not os.path.exists(path):
-        raise OSError('Requested file not present')
+if not os.path.exists(path):
+    raise OSError('Requested file not present')
 
-    data = np.loadtxt(fname, skiprows=1)
-    data = data[::500]
+data = np.loadtxt(fname, skiprows=1)
+data = data[::500]
 
 
 alt_compr_size = np.zeros(14)
 alt_compr_accuracy = np.zeros(14)
+alt_compr_accuracy_std = np.zeros(14)
 
 for cut in range(0, 53, 4):
 
@@ -46,11 +56,12 @@ for cut in range(0, 53, 4):
     alt_compr_size[cut/4] = os.path.getsize(path)
 
     alt_decompr_data = bit_decompressor(savefile)
-    alt_compr_accuracy[cut/4] = #compare data and alt_decompr_data
+    alt_compr_accuracy[cut/4], alt_compr_accuracy_std[cut/4] = comparator(data, alt_decompr_data)
 
 
 compr_size = np.zeros(17)
 compr_accuracy = np.zeros(17)
+compr_accuracy_std = np.zeros(17)
 
 for n_bins in range(0, 4097, 256):
 
@@ -76,16 +87,16 @@ for n_bins in range(0, 4097, 256):
         np.savetxt(decompr_savefile, result, delimiter=' ', newline='\n', header='')
 
     decompr_data = np.loadtxt(decompr_savefile)
-    compr_accuracy[n_bins / 256] =  # compare data and decompr_data
+    compr_accuracy[n_bins / 256], compr_accuracy_std[n_bins / 256] = comparator(data, decompr_data)
 
 
 plt.figure(figsize=(15, 10))
-plt.plot(compr_size, compr_accuracy)
-plt.plot(alt_compr_size, alt_compr_accuracy)
+plt.errorbar(compr_size, compr_accuracy, compr_accuracy_std)
+plt.errorbar(alt_compr_size, alt_compr_accuracy, alt_compr_accuracy_std)
 plt.title("compression accuracy")
 plt.legend(["NVP compr.", "Alt. compr."], loc="upper right")
 plt.ylabel("accuracy")
-plt.xlabel("size")
+plt.xlabel("filesize")
 
 plt.savefig('compr_accuracy.png')
 

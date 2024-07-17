@@ -6,12 +6,12 @@ from bitarray.util import zeros
 import fpzip
 
 
-def float_to_bitarray(value):
+def FloatToBitarray(value):
     ba = bitarray()
     ba.frombytes(struct.pack('!d', value))
     return ba
 
-def bitarray_to_float(ba):
+def BitarrayToFloat(ba):
     value = struct.unpack('!d', ba.tobytes())
     return value[0]
 
@@ -31,9 +31,9 @@ def AltDataCompressor(fname, savefile, cut):
         a.invert(i)
     with np.nditer(data, op_flags=['readwrite']) as it:
         for x in it:
-            ba = float_to_bitarray(x)
+            ba = FloatToBitarray(x)
             ba = ba & a
-            x = bitarray_to_float(ba)
+            x = BitarrayToFloat(ba)
 
     with open(savefile, "wb") as binary_file:
         binary_file.write(fpzip.compress(data, precision=0, order='C'))
