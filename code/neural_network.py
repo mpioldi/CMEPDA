@@ -267,9 +267,9 @@ class RealNVP(keras.Model):
 if __name__ == '__main__':
 
 
-    SaveWeights = 1
-    LoadWeights = 0
-    TrainModel = 1
+    SaveWeights = 0
+    LoadWeights = 1
+    TrainModel = 0
 
 
     #loading data

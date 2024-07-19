@@ -48,7 +48,7 @@ def DataCompressor(fname, n_bins, img=0):
     #uploading data
 
     data = np.loadtxt(fname, skiprows=1)
-    data = data[::100]
+    data = data[::500]
 
     #normalization
 

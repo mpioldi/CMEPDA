@@ -53,10 +53,13 @@ for cut in range(0, 53, 4):
     if not os.path.exists(path):
         AltDataCompressor("data.txt", savefile, cut)
 
-    alt_compr_size[cut/4] = os.path.getsize(path)
+    n = int(cut/4)
+
+    alt_compr_size[n] = os.path.getsize(path)
 
     alt_decompr_data = bit_decompressor(savefile)
-    alt_compr_accuracy[cut/4], alt_compr_accuracy_std[cut/4] = comparator(data, alt_decompr_data)
+    alt_decompr_data = alt_decompr_data[0, 0]
+    alt_compr_accuracy[n], alt_compr_accuracy_std[n] = comparator(data, alt_decompr_data)
 
 
 compr_size = np.zeros(17)
@@ -80,19 +83,21 @@ for n_bins in range(0, 4097, 256):
     if not os.path.exists(cbpath):
         BinDataCompressor(compr_txt_savefile, compr_bin_savefile)
 
-    compr_size[n_bins / 256] = os.path.getsize(cbpath)
+    n = int(n_bins / 256)
+
+    compr_size[n] = os.path.getsize(cbpath)
 
     if not os.path.exists(dpath):
         result = DataDecompressor(ctpath, n_bins)
         np.savetxt(decompr_savefile, result, delimiter=' ', newline='\n', header='')
 
     decompr_data = np.loadtxt(decompr_savefile)
-    compr_accuracy[n_bins / 256], compr_accuracy_std[n_bins / 256] = comparator(data, decompr_data)
+    compr_accuracy[n], compr_accuracy_std[n] = comparator(data, decompr_data)
 
 
 plt.figure(figsize=(15, 10))
-plt.errorbar(compr_size, compr_accuracy, compr_accuracy_std)
-plt.errorbar(alt_compr_size, alt_compr_accuracy, alt_compr_accuracy_std)
+plt.errorbar(compr_size, compr_accuracy, compr_accuracy_std, fmt='o')
+plt.errorbar(alt_compr_size, alt_compr_accuracy, alt_compr_accuracy_std, fmt='o')
 plt.title("compression accuracy")
 plt.legend(["NVP compr.", "Alt. compr."], loc="upper right")
 plt.ylabel("accuracy")
@@ -100,5 +105,5 @@ plt.xlabel("filesize")
 
 plt.savefig('compr_accuracy.png')
 
-
+plt.show()
 
