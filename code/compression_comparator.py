@@ -45,7 +45,7 @@ alt_compr_size = np.zeros(14)
 alt_compr_accuracy = np.zeros(14)
 alt_compr_accuracy_std = np.zeros(14)
 
-for cut in range(0, 53, 4):
+for cut in list(range(0, 45, 4)) + list(range (45, 53, 1)):
 
     savefile = f"alt_compr_data{cut}.bin"
     path = './' + savefile

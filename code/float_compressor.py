@@ -33,7 +33,7 @@ def AltDataCompressor(fname, savefile, cut):
         for x in it:
             ba = FloatToBitarray(x)
             ba = ba & a
-            x = BitarrayToFloat(ba)
+            x[...] = BitarrayToFloat(ba)
 
     with open(savefile, "wb") as binary_file:
         binary_file.write(fpzip.compress(data, precision=0, order='C'))
