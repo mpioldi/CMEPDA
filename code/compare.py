@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 initial = np.loadtxt("data.txt")[::100]
 
 # import final data
-final = np.loadtxt("decompr_data.txt")
+final = np.loadtxt("decompr_data/decompr_data.txt")
 
 # define difference between initial data and after compression-decompression cycle
 deltas = np.zeros(np.shape(initial))

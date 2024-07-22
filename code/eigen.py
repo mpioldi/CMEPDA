@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 initial = np.loadtxt("data.txt")[::100]
 
 # import final data
-final = np.loadtxt("decompr_data.txt")
+final = np.loadtxt("decompr_data/decompr_data.txt")
 
 # initialize dummy matrices
 initial_matrix = np.zeros((5, 5))
