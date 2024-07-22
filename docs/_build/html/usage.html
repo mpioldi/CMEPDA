@@ -123,11 +123,14 @@ distribution function and dividing the latter into n_bins equally long intervals
 <li><p><strong>img</strong> (<em>int</em>) – if it is 1, images of the distribution of the data at the various steps (before the compression, after converting to gaussians, after converting to uniform and after binning) are produced; defaults to 0</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>the data contained in fname, compressed</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>OSError</strong> – if file does not exist or is not in .txt format</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>numpy.array (,20)</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the data contained in fname, compressed</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>numpy.array (,20)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -148,11 +151,14 @@ compression of <a class="reference internal" href="#compress"><span class="std s
 <li><p><strong>img</strong> (<em>int</em>) – if it is 1, images of the distribution of the data at the various steps (before the decompression, after converting to gaussians, after reconverting to the original distributions) are produced; defaults to 0</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>the data contained in fname, decompressed</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>OSError</strong> – if file does not exist or is not in .txt format</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>numpy.array (,20)</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the data contained in fname, decompressed</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>numpy.array (,20)</p>
 </dd>
 </dl>
 </dd></dl>
