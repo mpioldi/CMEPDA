@@ -14,9 +14,6 @@ def MakeDummyTree(M, name = "dummytree.root"): #makes a tree with M events, two 
 
     tree = root.TTree("tree", "tree")
 
-    #paramvector = array('d', a*[0.]) 
-    #covariancematrix = array('d', b*[0.])
-
     paramvector = np.zeros((5,), dtype=np.double)
     covariancematrix = np.zeros((15,), dtype=np.double)
 
