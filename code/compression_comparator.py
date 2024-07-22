@@ -81,7 +81,7 @@ for cut in list(range(0, 45, 4)) + list(range(45, 53, 1)):
     # save the size of the compressed data file
     alt_compr_size[n] = os.path.getsize(path)
     # decompress the data
-    alt_decompr_data = bit_decompressor(savefile, path)
+    alt_decompr_data = bit_decompressor(path, path)
     # save the inaccuracy of the compressed data with the comparator method
     alt_compr_inaccuracy[n], alt_compr_inaccuracy_std[n] = comparator(data, alt_decompr_data)
     # save the cut value to be used as an annotation in the final plot
@@ -129,8 +129,8 @@ for n_bins in range(0, 4097, 256):
 
     # if the data hasn't been decompressed yet, it will be decompressed
     if not os.path.exists(dpath):
-        result = data_decompressor(ctpath, n_bins)
-        np.savetxt(decompr_savefile, result, delimiter=' ', newline='\n', header='')
+        result = data_decompressor(compr_txt_savefile, n_bins)
+        np.savetxt(dpath, result, delimiter=' ', newline='\n', header='')
 
     # load the decompressed data
     decompr_data = np.loadtxt(dpath)
