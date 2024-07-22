@@ -159,10 +159,10 @@ for i, (xi, yi) in enumerate(zip(alt_compr_size, alt_compr_accuracy)):
     plt.annotate(f'{int(alt_compr_annotation[i])}', (xi, yi), textcoords="offset points", xytext=(s0,10), ha='center')
 '''
 
-plt.title("compression accuracy")
+plt.title("Compression inaccuracy")
 plt.legend(["NVP compr.", "Alt. compr."], loc="upper right")
-plt.ylabel("accuracy")
-plt.xlabel("filesize")
+plt.ylabel("Inaccuracy")
+plt.xlabel("Filesize [bytes]")
 
 plt.savefig('compr_accuracy.png')
 
