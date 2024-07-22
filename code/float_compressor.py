@@ -1,3 +1,4 @@
+
 import numpy as np
 import os
 import struct
@@ -6,77 +7,99 @@ from bitarray.util import zeros
 import fpzip
 
 
-def FloatToBitarray(value):
+# transform a float value into a bitarray
+def float_to_bitarray(value):
+    # create empty bitarray
     ba = bitarray()
+    # transform the float into a byte array and then into a bitarray
     ba.frombytes(struct.pack('!d', value))
     return ba
 
-def BitarrayToFloat(ba):
+
+# transform a bitarray back into a float
+def bitarray_to_float(ba):
+    # transform bitarray into a byte array and then into an array containing the corresponding float
     value = struct.unpack('!d', ba.tobytes())
     return value[0]
 
 
-def AltDataCompressor(fname, savefile, cut):
+''' alternative compression method with respect to the one involving the neural network
+it transforms the floats of a dataset into bitarrays,
+then cuts a part of their mantissa by turning it into zeroes,
+turns the dataset elements back into floats
+and finally saves the data into a .bit file after compressing it with the fpzip algorithm
 
+parameters
+----------
+fname: string
+    name of the original data file
+savefile: string
+    name of the file where the compressed data will be stored
+cut: integer
+    number of mantissa bits that will be turned into zeroes
+'''
+def alt_data_compressor(fname, savefile, cut):
+
+    # verify the presence of the file
     path = './' + fname
-
     if not os.path.exists(path):
         raise OSError('Requested file not present')
 
+    # load data to be compressed
     data = np.loadtxt(fname, skiprows=1)
-    data = data[::500]
+    data = data[::100]
 
+    # create a bitarray with the dimension of a float (64) and a number of 0 bits at the end equal to the value of cut
     a = zeros(64)
     for i in range(64 - cut):
         a.invert(i)
+    # iterate over the dataset and turn the mantissa bits into zeroes, according to the value of cut
     with np.nditer(data, op_flags=['readwrite']) as it:
         for x in it:
-            ba = FloatToBitarray(x)
+            ba = float_to_bitarray(x)
             ba = ba & a
-            x[...] = BitarrayToFloat(ba)
+            x[...] = bitarray_to_float(ba)
 
+    # compress data into a .bit file with the fpzip algorithm
     with open(savefile, "wb") as binary_file:
         binary_file.write(fpzip.compress(data, precision=0, order='C'))
 
-def BinDataCompressor(fname, savefile):
 
+''' compression method to be used on the data previously compressed with compressor.py
+it turns the floats into bitarrays and compresses them with the fpzip algorithm
+making it possible to compare the normalizing flow compression with the mantissa cut compression described above
+
+parameters
+----------
+fname: string
+    name of the original data file
+savefile: string
+    name of the file where the compressed data will be stored
+'''
+
+def bin_data_compressor(fname, savefile):
+
+    # verify the presence of the file
     path = './' + fname
-
     if not os.path.exists(path):
          raise OSError('Requested file not present')
 
+    # load data to be compressed
     data = np.loadtxt(fname)
 
+    # compress data into a .bit file with the fpzip algorithm
     with open(savefile, "wb") as binary_file:
         binary_file.write(fpzip.compress(data, precision=0, order='C'))
 
 
 if __name__ == '__main__':
 
+    # if true, use the bin_data_compressor method, otherwise use alt_data_compressor
     complete_compression = 1
     cut = 10
 
     if complete_compression == 1:
-        AltDataCompressor("data.txt", "alt_compr_data.bin", cut)
+        alt_data_compressor("data.txt", "alt_compr_data.bin", cut)
     else:
-        BinDataCompressor("compr_data.txt", "compr_data.bin")
+        bin_data_compressor("compr_data.txt", "compr_data.bin")
 
-
-
-'''
-# Test:
-fl = -12.0
-bitarr = float_to_bitarray(fl)
-print(bitarr)
-print(type(bitarr))
-x = bitarray_to_float(bitarr)
-print(type(x))
-print(type(fl))
-print(x==fl)
-print(x)
-a = zeros(64)
-for i in range(12):
-    a.invert(i)
-bitarr = bitarr & a
-print(bitarr)
-'''
