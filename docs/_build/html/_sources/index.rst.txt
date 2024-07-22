@@ -12,8 +12,6 @@ Welcome to NormFlow compression's documentation!
 
    usage
 
-Check out the :doc:'usage' section for further information
-
 Indices and tables
 ==================
 
