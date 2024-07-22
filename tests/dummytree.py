@@ -17,15 +17,21 @@ def MakeDummyTree(M, name = "dummytree.root"):
         # if the file containing the dummy tree already exists, it is canceled
         os.remove(path)
 
+    # create root file and filling a tree inside it
+    
     file = root.TFile.Open(name, "RECREATE")
 
     tree = root.TTree("tree", "tree")
+
+    #initializing branches
 
     paramvector = np.zeros((5,), dtype=np.double)
     covariancematrix = np.zeros((15,), dtype=np.double)
 
     tree.Branch("Vector", paramvector, 'Vector[5]/D')
     tree.Branch("Matrix", covariancematrix, 'Matrix[15]/D')
+
+    # tree is filled with arrays of consecutive numbers
 
     for i in range(M):
 
