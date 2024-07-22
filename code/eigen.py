@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 #import initial data
 
-initial = np.loadtxt("data.txt")[::100]
+initial = np.loadtxt("data.txt")[::500]
 
 #import final data
 
