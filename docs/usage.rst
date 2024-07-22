@@ -76,6 +76,7 @@ Compressing data
     :type n_bits: int
     :param img: if it is 1, images of the distribution of the data at the various steps (before the compression, after converting to gaussians, after converting to uniform and after binning) are produced; defaults to 0 
     :type img: int
+    :raise OSError: if file does not exist or is not in .txt format
     :return: the data contained in fname, compressed
     :rtype: numpy.array (,20)
 
@@ -93,5 +94,6 @@ Decompressing data
     :type n_bits: int
     :param img: if it is 1, images of the distribution of the data at the various steps (before the decompression, after converting to gaussians, after reconverting to the original distributions) are produced; defaults to 0 
     :type img: int
+    :raise OSError: if file does not exist or is not in .txt format
     :return: the data contained in fname, decompressed
     :rtype: numpy.array (,20)
