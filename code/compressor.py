@@ -139,5 +139,5 @@ if __name__ == '__main__':
     name = "data.txt"
     n = 2048
     result = data_compressor(name, n, img=produce_images)
-    np.savetxt("compr_data.txt", result, delimiter=' ', newline='\n', header='')
+    np.savetxt("compr_data/compr_data.txt", result, delimiter=' ', newline='\n', header='')
 

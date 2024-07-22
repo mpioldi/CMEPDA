@@ -24,7 +24,7 @@ def gauss(x):
 def data_decompressor(fname, n_bins, img=0):
 
     # check if file is present
-    path = './' + fname
+    path = './compr_data/' + fname
     if not os.path.exists(path):
         raise OSError('Requested file not present')
     # check if file is .txt
@@ -34,7 +34,7 @@ def data_decompressor(fname, n_bins, img=0):
     print('started model definition')
         
     # model definition
-    model = RealNVP(num_coupling_layers=layers_number) # compiling model
+    model = RealNVP(num_coupling_layers=layers_number)  # compiling model
     model.compile()
     # load weights used to generate compressed data
     model.model_load_weights()
@@ -45,7 +45,7 @@ def data_decompressor(fname, n_bins, img=0):
     sigmas = conv_params[1, :]
 
     # load data in numpy tensor z_unif
-    z_unif = np.loadtxt(fname)
+    z_unif = np.loadtxt(path)
 
     print('data imported')
     
@@ -133,5 +133,5 @@ if __name__ == '__main__':
     name = "compr_data.txt"
     n = 2048
     result = data_decompressor(name, n, img=produce_images)
-    np.savetxt("decompr_data.txt", result, delimiter=' ', newline='\n', header='')
+    np.savetxt("decompr_data/decompr_data.txt", result, delimiter=' ', newline='\n', header='')
 

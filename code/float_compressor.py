@@ -61,7 +61,8 @@ def alt_data_compressor(fname, savefile, cut):
             x[...] = bitarray_to_float(ba)
 
     # compress data into a .bit file with the fpzip algorithm
-    with open(savefile, "wb") as binary_file:
+    savepath = './alt_compr_data/' + savefile
+    with open(savepath, "wb") as binary_file:
         binary_file.write(fpzip.compress(data, precision=0, order='C'))
 
 
@@ -80,15 +81,16 @@ savefile: string
 def bin_data_compressor(fname, savefile):
 
     # verify the presence of the file
-    path = './' + fname
+    path = './compr_data/' + fname
     if not os.path.exists(path):
-         raise OSError('Requested file not present')
+        raise OSError('Requested file not present')
 
     # load data to be compressed
-    data = np.loadtxt(fname)
+    data = np.loadtxt(path)
 
     # compress data into a .bit file with the fpzip algorithm
-    with open(savefile, "wb") as binary_file:
+    savepath = './compr_data/' + savefile
+    with open(savepath, "wb") as binary_file:
         binary_file.write(fpzip.compress(data, precision=0, order='C'))
 
 

@@ -10,10 +10,9 @@ from decompressor import data_decompressor
 
 
 # extracts the data of the .bin file "fname" compressed with the fpzip algorithm and returns it as a numpy array
-def bit_decompressor(fname):
+def bit_decompressor(fname, path):
 
     # verify the presence of the file
-    path = './' + fname
     if not os.path.exists(path):
         raise OSError('Requested file not present')
 
@@ -73,7 +72,7 @@ n = 0
 for cut in list(range(0, 45, 4)) + list(range(45, 53, 1)):
     # names of the files where the compressed data will be stored
     savefile = f"alt_compr_data{cut}.bin"
-    path = './' + savefile
+    path = './alt_compr_data/' + savefile
 
     # if the data hasn't been compressed with a certain cut value, it will be compressed
     if not os.path.exists(path):
@@ -82,7 +81,7 @@ for cut in list(range(0, 45, 4)) + list(range(45, 53, 1)):
     # save the size of the compressed data file
     alt_compr_size[n] = os.path.getsize(path)
     # decompress the data
-    alt_decompr_data = bit_decompressor(savefile)
+    alt_decompr_data = bit_decompressor(savefile, path)
     # save the inaccuracy of the compressed data with the comparator method
     alt_compr_inaccuracy[n], alt_compr_inaccuracy_std[n] = comparator(data, alt_decompr_data)
     # save the cut value to be used as an annotation in the final plot
@@ -111,14 +110,14 @@ for n_bins in range(0, 4097, 256):
     # names of the files where the decompressed data will be stored
     decompr_savefile = f"decompr_data{n_bins}.txt"
 
-    ctpath = './' + compr_txt_savefile
-    cbpath = './' + compr_bin_savefile
-    dpath = './' + decompr_savefile
+    ctpath = './compr_data/' + compr_txt_savefile
+    cbpath = './compr_data/' + compr_bin_savefile
+    dpath = './decompr_data/' + decompr_savefile
 
     # if the data hasn't been compressed with data_compressor for a certain n_bins value, it will be compressed
     if not os.path.exists(ctpath):
         result = data_compressor("data.txt", n_bins)
-        np.savetxt(compr_txt_savefile, result, delimiter=' ', newline='\n', header='')
+        np.savetxt(ctpath, result, delimiter=' ', newline='\n', header='')
 
     # if the data compressed by data_compressor hasn't been compressed with bin_data_compressor, it will be compressed
     if not os.path.exists(cbpath):
@@ -134,7 +133,7 @@ for n_bins in range(0, 4097, 256):
         np.savetxt(decompr_savefile, result, delimiter=' ', newline='\n', header='')
 
     # load the decompressed data
-    decompr_data = np.loadtxt(decompr_savefile)
+    decompr_data = np.loadtxt(dpath)
     # save the inaccuracy of the compressed data with the comparator method
     compr_accuracy[n], compr_accuracy_std[n] = comparator(data, decompr_data)
     # save the n_bins value to be used as an annotation in the final plot
