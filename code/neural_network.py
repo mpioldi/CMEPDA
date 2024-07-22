@@ -240,12 +240,12 @@ class RealNVP(keras.Model):
     # used to save final weights if SaveWeights option is selected
     def model_save_weights(self):
         for idx, x in enumerate(self.layers_list):
-            x.save_weights(f"weights{idx}.weights.h5")
+            x.save_weights(f"weights/weights{idx}.weights.h5")
 
     # used to load starting weights if LoadWeights option is selected
     def model_load_weights(self):
         for idx, x in enumerate(self.layers_list):
-            x.load_weights(f"weights{idx}.weights.h5")
+            x.load_weights(f"weights/weights{idx}.weights.h5")
 
 
 if __name__ == '__main__':
