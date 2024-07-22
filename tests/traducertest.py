@@ -13,19 +13,21 @@ class TestTraducer(unittest.TestCase):
 
     def test_RootToNumpy(self):
 
-        elem_num = 100
+        elem_num = 100 # number of elements in the dummy tree
 
         MakeDummyTree(elem_num, "dummytree.root")
 
         translated_tree = RootToNumpy("dummytree.root", "tree") 
 
+        #checking if dummytree has been written correctly
+        
         for i in range(elem_num):
             for j in range(20):
                 self.assertAlmostEqual(translated_tree[i][j], (i*20 + j))
 
     def test_NumpyToRoot(self):
 
-        elem_num = 100
+        elem_num = 100 # number of elements in the dummy array
         
         a = np.zeros((elem_num, 20), dtype=np.double)  # initializing empty dummy array to be filled
 
