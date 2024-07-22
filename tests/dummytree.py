@@ -1,14 +1,21 @@
+
 import numpy as np
 import os
 import ROOT as root
 
-def MakeDummyTree(M, name = "dummytree.root"): #makes a tree with M events, two columns, one with vectors of a elements and the other with vectors of b elements, filled with consecutive numbers
+
+''' makes a tree with M events, two columns,
+one with vectors of a elements and the other with vectors of b elements,
+filled with consecutive numbers
+'''
+
+def MakeDummyTree(M, name = "dummytree.root"):
 
     path = "./" + name
 
     if os.path.exists(path):
-
-        os.remove(path) #if the file containing the dummy tree already exists, it is canceled
+        # if the file containing the dummy tree already exists, it is canceled
+        os.remove(path)
 
     file = root.TFile.Open(name, "RECREATE")
 
@@ -24,7 +31,7 @@ def MakeDummyTree(M, name = "dummytree.root"): #makes a tree with M events, two 
 
         for j in range(5):
 
-            paramvector[j] =  i*20 + j
+            paramvector[j] = i*20 + j
 
         for k in range(15):
 
@@ -33,3 +40,4 @@ def MakeDummyTree(M, name = "dummytree.root"): #makes a tree with M events, two 
         tree.Fill()
 
     file.Write()
+
