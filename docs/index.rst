@@ -10,7 +10,15 @@ Welcome to NormFlow compression's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   usage
+   requirements
+   neural_network
+   compressor
+   decompressor
+   float_compressor
+   traducers
+   compare
+   eigen
+   compression_comparator
 
 Indices and tables
 ==================
