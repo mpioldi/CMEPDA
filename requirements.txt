@@ -15,7 +15,7 @@ from scipy.special import erf, erfinv
 
 from tensorflow.keras import regularizers
 
-#to run translate_tree.py and traducers.py
+#to run traducers.py
 
 import ROOT
 import sys
