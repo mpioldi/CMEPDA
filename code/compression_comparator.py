@@ -10,14 +10,14 @@ from decompressor import data_decompressor
 
 
 # extracts the data of the .bin file "fname" compressed with the fpzip algorithm and returns it as a numpy array
-def bit_decompressor(fname, path):
+def bit_decompressor(path):
 
     # verify the presence of the file
     if not os.path.exists(path):
         raise OSError('Requested file not present')
 
     # read the file
-    with open(fname, "rb") as file:
+    with open(path, "rb") as file:
         compressed_bytes = file.read()
 
     # extract the file data into a numpy array
@@ -81,7 +81,7 @@ for cut in list(range(0, 45, 4)) + list(range(45, 53, 1)):
     # save the size of the compressed data file
     alt_compr_size[n] = os.path.getsize(path)
     # decompress the data
-    alt_decompr_data = bit_decompressor(path, path)
+    alt_decompr_data = bit_decompressor(path)
     # save the inaccuracy of the compressed data with the comparator method
     alt_compr_inaccuracy[n], alt_compr_inaccuracy_std[n] = comparator(data, alt_decompr_data)
     # save the cut value to be used as an annotation in the final plot
