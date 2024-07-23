@@ -2,7 +2,7 @@ Usage
 =====
 
 Requirements
------------------
+------------
 
 To use NormFlow compression, you will need Python 3, ROOT and the following Python packages:
 
@@ -19,7 +19,7 @@ To use NormFlow compression, you will need Python 3, ROOT and the following Pyth
 
 
 Translating from ROOT to numpy an uncompressed database and vice versa
---------------------------------------------------------
+----------------------------------------------------------------------
 
 .. py:function:: RootToNumpy(name, treename)
 
@@ -61,7 +61,7 @@ The ``array`` parameter should have the right size, otherwise
 .. _compress:
 
 Compressing data
---------------------------------------------------------
+----------------
 
 .. py:function:: DataCompressor(fname, n_bins, img=0)
 
@@ -81,7 +81,7 @@ Compressing data
     :rtype: numpy.array (,20)
 
 Decompressing data
---------------------------------------------------------
+------------------
 
 .. py:function:: DataDecompressor(fname, n_bins, img=0)
 
