@@ -19,8 +19,18 @@ def gauss(x):
     return erfinv(x * 2.0 - 1.0) * np.sqrt(2.0)
 
 
-# first argument: name of the file to be decompressed
-# second argument: number of bins of the compressed data
+''' decompression method that takes data compressed by data_compressor as input
+and turns it back into the original data format by following the compression algorithm steps in reverse.
+
+parameters
+----------
+fname: string
+    name of the file storing the compressed data
+n_bins: integer
+    value of n_bins used for the data compression, needed to reverse the compression process
+img: bool
+    when true, plot the compressed data, which should be uniform, and the data at the end of the decompression process
+'''
 def data_decompressor(fname, n_bins, img=0):
 
     # check if file is present

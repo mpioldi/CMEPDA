@@ -18,6 +18,21 @@ def gauss_cdf(x):
     return (1.0 + erf(x / np.sqrt(2.0))) / 2.0
 
 
+''' compression method that transforms the experimental data into gaussians using the RealNVP model,
+then turns the gaussians into uniform distributions with the normal cumulative distribution function,
+and finally compresses the data in a lossy way by grouping the uniform data into a set amount of evenly spaced bins.
+The compressed data is returned as a tf tensor
+
+parameters
+----------
+fname: string
+    name of the file storing the data to be compressed
+n_bins: integer
+    number of bins into which the uniformed data will be divided, less bins means more lossy compression
+img: bool
+    when true, the data will be plotted at the various stages of the compression process:
+    first the original data, then the gaussian data, then the uniform data, and finally the uniform data grouped in bins
+'''
 def data_compressor(fname, n_bins, img=0):
 
     # check if file is present
@@ -29,7 +44,7 @@ def data_compressor(fname, n_bins, img=0):
         raise OSError('File is not .txt')
         
     # model definition
-    model = RealNVP(num_coupling_layers=layers_number) # compiling model
+    model = RealNVP(num_coupling_layers=layers_number)  # compiling model
     model.compile()
     model.model_load_weights()
 
@@ -59,7 +74,7 @@ def data_compressor(fname, n_bins, img=0):
     z_int[:, 5:] = np.floor(z_unif[:, 5:])
     z_compr = z.numpy()
     z_compr[:, 5:] = z_int.astype(int)[:, 5:]
-    z_compr = tf.convert_to_tensor(z_compr) 
+    z_compr = tf.convert_to_tensor(z_compr)
     
     # plots, if requested:
     if img == 1:
