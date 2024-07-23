@@ -36,8 +36,8 @@
 <h1>float_compressor.py<a class="headerlink" href="#float-compressor-py" title="Link to this heading">¶</a></h1>
 <p>Contains the functions used to compress data into binary .bit files</p>
 <dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">alt_data_compressor(fname,</span> <span class="pre">savefile,</span> <span class="pre">cut):</span></span></dt>
+<dt class="sig sig-object py" id="alt_data_compressor">
+<span class="sig-name descname"><span class="pre">alt_data_compressor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savefile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cut</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#alt_data_compressor" title="Link to this definition">¶</a></dt>
 <dd><p>Alternative compression method with respect to the one involving the neural network.
 It transforms the floats of a dataset into bitarrays,
 then cuts a part of their mantissa by turning it into zeroes,
@@ -58,8 +58,8 @@ and finally saves the data into a .bit file after compressing it with the fpzip 
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">bin_data_compressor(fname,</span> <span class="pre">savefile):</span></span></dt>
+<dt class="sig sig-object py" id="bin_data_compressor">
+<span class="sig-name descname"><span class="pre">bin_data_compressor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savefile</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bin_data_compressor" title="Link to this definition">¶</a></dt>
 <dd><p>Compression method to be used on the data previously compressed with compressor.py.
 It turns the floats into bitarrays and compresses them with the fpzip algorithm,
 making it possible to compare the normalizing flow compression with the mantissa cut compression described above.</p>
@@ -101,7 +101,11 @@ making it possible to compare the normalizing flow compression with the mantissa
 <li class="toctree-l1"><a class="reference internal" href="neural_network.html">neural_network.py</a></li>
 <li class="toctree-l1"><a class="reference internal" href="compressor.html">compressor.py</a></li>
 <li class="toctree-l1"><a class="reference internal" href="decompressor.html">decompressor.py</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">float_compressor.py</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">float_compressor.py</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#alt_data_compressor"><code class="docutils literal notranslate"><span class="pre">alt_data_compressor()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bin_data_compressor"><code class="docutils literal notranslate"><span class="pre">bin_data_compressor()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="traducers.html">traducers.py</a></li>
 <li class="toctree-l1"><a class="reference internal" href="compare.html">compare.py</a></li>
 <li class="toctree-l1"><a class="reference internal" href="eigen.html">eigen.py</a></li>

@@ -1,5 +1,5 @@
 Requirements
-=====
+============
 
 To use NormFlow compression, you will need Python 3, ROOT and the following Python packages:
 

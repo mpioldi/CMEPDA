@@ -33,10 +33,19 @@
           <div class="body" role="main">
             
   <section id="compressor-py">
-<span id="compressor"></span><h1>compressor.py<a class="headerlink" href="#compressor-py" title="Link to this heading">¶</a></h1>
+<h1>compressor.py<a class="headerlink" href="#compressor-py" title="Link to this heading">¶</a></h1>
+<p>Requirements:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">from neural_network import RealNVP, layers_number, meansfilename</span>
+</pre></div>
+</div>
+<p>data.txt, means.txt, the filled ‘weights’ folder and the ‘compr_data’
+destination folder are needed.
+The files can be obtained by executing neural_network.py</p>
+<p>The main calls the data_compressor(‘data.txt’, 2048, img=1) method and saves
+the results to ‘compr_data/compr_data.txt’.</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="DataCompressor">
-<span class="sig-name descname"><span class="pre">DataCompressor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataCompressor" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="data_compressor">
+<span class="sig-name descname"><span class="pre">data_compressor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_compressor" title="Link to this definition">¶</a></dt>
 <dd><p>Takes a fname txt file, containing an array of 20 elements numpy arrays (shape (,20)), and applies a lossy
 compression algorithm that equally divides the data in integer values (‘bins’) from the interval [0, n_bins)
 by converting them to a normal distribution first, then to a uniform distribution through a cumulative
@@ -85,7 +94,7 @@ distribution function and dividing the latter into n_bins equally long intervals
 <li class="toctree-l1"><a class="reference internal" href="requirements.html">Requirements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="neural_network.html">neural_network.py</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">compressor.py</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#DataCompressor"><code class="docutils literal notranslate"><span class="pre">DataCompressor()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data_compressor"><code class="docutils literal notranslate"><span class="pre">data_compressor()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="decompressor.html">decompressor.py</a></li>

@@ -34,6 +34,27 @@
             
   <section id="neural-network-py">
 <h1>neural_network.py<a class="headerlink" href="#neural-network-py" title="Link to this heading">¶</a></h1>
+<p>The RealVPN machine learning algorithm used to convert the data of symmetric 5x5 matrices into 15 normal distributions.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="coupling">
+<span class="sig-name descname"><span class="pre">coupling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#coupling" title="Link to this definition">¶</a></dt>
+<dd><p>The coupling layer used by the neural network. It has an initial normalization layer, then it splits into two
+branches which return the parameters s and t used for the normalizing flow.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="RealNVP">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RealNVP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keras.Model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RealNVP" title="Link to this definition">¶</a></dt>
+<dd><p>RealNVP finds the change of coordinates from the original data to normal distributions.
+It cascades invertible transformations depending on the parameters s and t.
+The loss function is the sum of the log likelihood of the normal distribution
+and the log determinant of the jacobian of the transformation.</p>
+</dd></dl>
+
+<p>There main has the options to save the training weight in the weight folder and load them for future training,
+or even just load them without further training.
+This options can be selected by modifying the bools SaveWeights, LoadWeights and TrainModel.
+At the end a plot containing the final transformed data is presented.</p>
 </section>
 
 
@@ -56,7 +77,11 @@
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="requirements.html">Requirements</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">neural_network.py</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">neural_network.py</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#coupling"><code class="docutils literal notranslate"><span class="pre">coupling()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#RealNVP"><code class="docutils literal notranslate"><span class="pre">RealNVP</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="compressor.html">compressor.py</a></li>
 <li class="toctree-l1"><a class="reference internal" href="decompressor.html">decompressor.py</a></li>
 <li class="toctree-l1"><a class="reference internal" href="float_compressor.html">float_compressor.py</a></li>

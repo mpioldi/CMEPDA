@@ -33,6 +33,12 @@
             
   <section id="compression-comparator-py">
 <h1>compression_comparator.py<a class="headerlink" href="#compression-comparator-py" title="Link to this heading">¶</a></h1>
+<p>It uses the functions contained in float_compressor.py, compressor.py and decompressor.py to compress
+the experimental data in 2 ways with different parameters.</p>
+<p>The first type of compression uses the alt_data_compressor method with different values of cut.</p>
+<p>The second type uses data_compressor and bin_data_compressor one after the other, with different values of n_cut.</p>
+<p>Finally, the inaccuracy of the compression methods (difference between compressed and original data) is plotted
+as a function of the compressed data file size.</p>
 </section>
 
 

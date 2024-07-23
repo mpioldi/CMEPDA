@@ -1,9 +1,9 @@
 float_compressor.py
-=====
+===================
 
 Contains the functions used to compress data into binary .bit files
 
-.. py:function:: alt_data_compressor(fname, savefile, cut):
+.. py:function:: alt_data_compressor(fname, savefile, cut)
 
     Alternative compression method with respect to the one involving the neural network.
     It transforms the floats of a dataset into bitarrays,
@@ -19,7 +19,7 @@ Contains the functions used to compress data into binary .bit files
     :type cut: int
     :raise OSError: if file does not exist
 
-.. py:function:: bin_data_compressor(fname, savefile):
+.. py:function:: bin_data_compressor(fname, savefile)
 
     Compression method to be used on the data previously compressed with compressor.py.
     It turns the floats into bitarrays and compresses them with the fpzip algorithm,

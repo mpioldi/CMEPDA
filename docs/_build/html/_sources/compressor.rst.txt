@@ -1,9 +1,20 @@
-.. _compressor:
-
 compressor.py
 =====
 
-.. py:function:: DataCompressor(fname, n_bins, img=0)
+Requirements:
+
+.. code-block:: console
+
+    from neural_network import RealNVP, layers_number, meansfilename
+
+data.txt, means.txt, the filled 'weights' folder and the 'compr_data'
+destination folder are needed. 
+The files can be obtained by executing neural_network.py
+
+The main calls the data_compressor('data.txt', 2048, img=1) method and saves
+the results to 'compr_data/compr_data.txt'.
+
+.. py:function:: data_compressor(fname, n_bins, img=0)
 
     Takes a fname txt file, containing an array of 20 elements numpy arrays (shape (,20)), and applies a lossy
     compression algorithm that equally divides the data in integer values ('bins') from the interval [0, n_bins)
