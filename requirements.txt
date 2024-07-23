@@ -1,0 +1,30 @@
+#general requirements
+
+import numpy
+import matplotlib.pyplot
+import os
+import tensorflow as tf
+from tensorflow import keras
+import tensorflow_probability 
+
+#to run compressor.py and decompressor.py
+
+from scipy.special import erf, erfinv
+
+#to train the network
+
+from tensorflow.keras import regularizers
+
+#to run translate_tree.py and traducers.py
+
+import ROOT
+import sys
+from array import array
+from DataFormats.FWLite import Events, Handle
+
+The following folders are needed to be created in the code folder for each script:
+compr_data is needed for compressor.py, compression_comparator.py
+decompr_data is needed for decompressor.py, compression_comparator.py
+alt_compr data is needed for compression_comparator.py
+
+

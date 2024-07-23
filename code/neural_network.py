@@ -19,10 +19,8 @@ reg = 0.01
 
 ''' Custom affine coupling layers for the training of Real NVP scale and translation parameters
 there are two output branches, one for s and one for t
-each branch has 13 dense layers with relu activation for better training,
-while the last layers has linear activation to allow more freedom
-for the choice of s and t
-l2 regularization penalties (sum of squares) to avoid overfitting
+each branch has 12 dense layers with relu activation for better training,
+while the last 2 layers has respectively tanh or linear activation 
 '''
 
 # definition of neural network layers
